@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "crypto.h"
+#include "utils.h"
 
 #define LIMIT 31
 
@@ -14,13 +15,12 @@
  * -p password
  */
 
-int main(int argc, const char * * argv){
+int main(int argc, const char ** argv){
     /* Variable declaration */
     FILE *in_file, *out_file;
     char * in_file_name,  * out_file_name, * password, accept;
     /* Mode: 0 for encryption, 1 for decryption */
     int mode, in_file_name_length, out_file_name_length, password_length;
-
 
     /* Get args */
     if(argc != 4 && argc != 6){
@@ -92,6 +92,14 @@ int main(int argc, const char * * argv){
     }
 
     /* File open and control */
+
+
+    if(open_in_file(in_file, in_file_name)==EXIT_FAILURE){
+	return EXIT_FAILURE;
+    }
+    if(open_out_file(out_file, out_file_name)==EXIT_FAILURE){
+	return EXIT_FAILURE;
+    }
 
     /* First check if input file exists */
     if((in_file = fopen(in_file_name, "rb")) == NULL){
