@@ -1,42 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Encrypt function taking input files and passwords as args
- * Returns the number of bytes written to the encrypted file
- */
-int encrypt(FILE * fileIn, FILE * fileOut, char * password){
-    int i=0;
-    while(fileIn != EOF){
-	fprintf(fileOut, fileIn);
-	i++;
-    }
-    return EXIT_SUCCESS;
-}
-
-/* Decrypt function taking input files and passwords as args
- * Returns the number of bytes written to the decrypted file
- */
-int decrypt(FILE * fileIn, FILE * fileOut, char * password){
-
-    return EXIT_SUCCESS;
-}
-
 /* Random number ]0, 1] generator, proposed by Lecuyer, replace bad rand()    */
 double rando(char * password)
 { 
     /* Password string -> ints*/
     int i=0, pass_seed=0;
-    while(password[i]!='\0'){
-	pass_seed += password[i];
+    while(password[i] != '\0'){
+	pass_seed += (int)password[i];
+	i++;
     }
     static int x10 = 12345, x11 = 67890, x12 = 13579,          /* initial value */
 	       x20 = 24680, x21 = 98765, x22 = 43210;               /* of seeds */
-    x10 *= pass_seed;
-    x11 *= pass_seed;
-    x12 *= pass_seed;
-    x20 *= pass_seed;
-    x21 *= pass_seed;
-    x22 *= pass_seed;
+    x10 -= pass_seed; x11 += pass_seed; x12 -= pass_seed;     /* To modify seeds with the password */
+    x20 += pass_seed; x21 -= pass_seed; x22 += pass_seed;
     const int m = 2147483647; const int m2 = 2145483479;
     const int a12= 63308; const int q12=33921; const int r12=12979;
     const int a13=-183326; const int q13=11714; const int r13=2883;
@@ -56,3 +33,26 @@ double rando(char * password)
     if (h == 0) return(1.0);
     else return(h*invm);
 }
+
+/* Encrypt function taking input files and passwords as args
+ * Returns the number of bytes written to the encrypted file
+ */
+int encrypt(FILE * fileIn, FILE * fileOut, char * password){
+    char c;
+    while((c = fgetc(fileIn)) != EOF){
+	fprintf(fileOut, "%c", (char)(c+(int)(rando(password)*100)));
+    }
+    return EXIT_SUCCESS;
+}
+
+/* Decrypt function taking input files and passwords as args
+ * Returns the number of bytes written to the decrypted file
+ */
+int decrypt(FILE * fileIn, FILE * fileOut, char * password){
+    char c;
+    while((c = fgetc(fileIn)) != EOF){
+	fprintf(fileOut, "%c", (char)(c-(int)(rando(password)*100)));
+    }
+    return EXIT_SUCCESS;
+}
+
