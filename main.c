@@ -80,13 +80,10 @@ int main(int argc, const char ** argv){
     else{
 	/* If the user is not providing a password through argv, ask for one */
 	printf("Entrez un mot de passe: ");
-	scanf("%s", &password);
-	while(getchar()!='\n');
-	/* 
-	 * A basic password is provided to rando if the user is not giving
-	 * it's own
-	 */
-	if(strlen(password)==0){
+	if(scanf("%s", password)!=1){
+	    /* If the user input is not recognised, using default pass */
+	    while(getchar()!='\n');
+
 	    password_length = strlen(BASE_PASS);
 	    password = malloc(password_length * sizeof(char));
 	    if(password == NULL){
@@ -96,6 +93,7 @@ int main(int argc, const char ** argv){
 	    strcpy(password, BASE_PASS);
 	}
     }
+    printf("Used PASS: %s\n", password);
 
     /* Mode check an printing out to stdr the expected result */
     if(strcmp(argv[1], "-c")==0){
@@ -118,6 +116,8 @@ int main(int argc, const char ** argv){
     /* First check if input file exists */
     if((in_file = fopen(in_file_name, "rb")) == NULL){
 	printf("Le fichier d'entrée n'existe pas!");
+	free(in_file_name);
+	free(password);
 	return EXIT_FAILURE;
     }
 
@@ -133,15 +133,25 @@ int main(int argc, const char ** argv){
 	if(accept=='y'){
 	    if((out_file = fopen(out_file_name, "wb")) == NULL){
 		printf("Echec de l'ouverture du fichier de sortie!");
+		fclose(in_file);
+		free(in_file_name);
+		free(out_file_name);
 		return EXIT_FAILURE;
 	    }
 	}
 	else{
+	    fclose(in_file);
+	    fclose(out_file);
+	    free(in_file_name);
+	    free(out_file_name);
 	    return EXIT_FAILURE;
 	}
     }
     else if((out_file = fopen(out_file_name, "wb")) == NULL){
 	printf("Echec de l'ouverture du fichier de sortie!");
+	fclose(in_file);
+	free(in_file_name);
+	free(out_file_name);
 	return EXIT_FAILURE;
     }
 
@@ -153,8 +163,11 @@ int main(int argc, const char ** argv){
 	decrypt(in_file, out_file, password);
     }
 
+    /* Free memory */
     fclose(in_file);
     fclose(out_file);
+    free(in_file_name);
+    free(out_file_name);
 
     return EXIT_SUCCESS;
 }

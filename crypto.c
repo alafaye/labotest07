@@ -13,7 +13,6 @@
 /* Random number ]0, 1] generator, proposed by Lecuyer, replace bad rand()    */
 double rando(char * password)
 { 
-    /* Password string -> ints*/
     static int x10 = 12345, x11 = 67890, x12 = 13579,          /* initial value */
 	       x20 = 24680, x21 = 98765, x22 = 43210;               /* of seeds */
     const int m = 2147483647; const int m2 = 2145483479;
@@ -25,6 +24,7 @@ double rando(char * password)
     int h, p12, p13, p21, p23;
     int i=0, pass_seed=0;
 
+    /* Password string -> ints */
     while(password[i] != '\0'){
 	pass_seed += (int)password[i];
 	i++;
