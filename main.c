@@ -31,7 +31,8 @@ int main(int argc, const char ** argv){
     /* Mode: 0 for encryption, 1 for decryption */
     int mode, in_file_name_length, out_file_name_length, password_length;
 
-    /* Get args */
+    /* Arguments mangement */
+    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
     if(argc != 4 && argc != 6){
 	printf("Mauvais nombre d'arguments spécifié");
 	return EXIT_FAILURE;
@@ -77,16 +78,23 @@ int main(int argc, const char ** argv){
 	}
     }
     else{
-	/* A basic password is provided to rando if the user is not giving
+	/* If the user is not providing a password through argv, ask for one */
+	printf("Entrez un mot de passe: ");
+	scanf("%s", &password);
+	while(getchar()!='\n');
+	/* 
+	 * A basic password is provided to rando if the user is not giving
 	 * it's own
 	 */
-	password_length = strlen(BASE_PASS);
-	password = malloc(password_length * sizeof(char));
-	if(password == NULL){
-	    printf("Le mot de passe n'est pas valide!");
-	    return EXIT_FAILURE;
+	if(strlen(password)==0){
+	    password_length = strlen(BASE_PASS);
+	    password = malloc(password_length * sizeof(char));
+	    if(password == NULL){
+		printf("Le mot de passe n'est pas valide!");
+		return EXIT_FAILURE;
+	    }
+	    strcpy(password, BASE_PASS);
 	}
-	strcpy(password, BASE_PASS);
     }
 
     /* Mode check an printing out to stdr the expected result */
