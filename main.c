@@ -31,6 +31,7 @@ int main(int argc, const char ** argv){
     char * in_file_name,  * out_file_name, * password, buffer_password[LIMIT_SIZE_PASS], accept;
     /* Mode: 0 for encryption, 1 for decryption */
     int mode, arg_nbr, in_file_name_length, out_file_name_length, password_length;
+    int bytes_written;
 
     /* Arguments mangement */
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -175,11 +176,13 @@ int main(int argc, const char ** argv){
 
 
     if(mode==0){
-	encrypt(in_file, out_file, password);
+	bytes_written = encrypt(in_file, out_file, password);
     }
     else if(mode==1){
-	decrypt(in_file, out_file, password);
+	bytes_written = decrypt(in_file, out_file, password);
     }
+
+    printf("%d octets ont été écrits.\n", bytes_written);
 
     /* Free memory */
     fclose(in_file);

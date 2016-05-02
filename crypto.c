@@ -54,25 +54,31 @@ double rando(char * password)
     else return(h*invm);
 }
 
-/* Encrypt function taking input files and passwords as args
+/* 
+ * Encrypt function taking input files and passwords as args
  * Returns the number of bytes written to the encrypted file
  */
 int encrypt(FILE * fileIn, FILE * fileOut, char * password){
     char c;
+    int bytes_written=0;
     while((c = fgetc(fileIn)) != EOF){
 	fprintf(fileOut, "%c", (char)(c+(int)(rando(password)*100)));
+	bytes_written += sizeof(char);
     }
-    return EXIT_SUCCESS;
+    return bytes_written;
 }
 
-/* Decrypt function taking input files and passwords as args
+/* 
+ * Decrypt function taking input files and passwords as args
  * Returns the number of bytes written to the decrypted file
  */
 int decrypt(FILE * fileIn, FILE * fileOut, char * password){
     char c;
+    int bytes_written=0;
     while((c = fgetc(fileIn)) != EOF){
 	fprintf(fileOut, "%c", (char)(c-(int)(rando(password)*100)));
+	bytes_written += sizeof(char);
     }
-    return EXIT_SUCCESS;
+    return bytes_written;
 }
 
