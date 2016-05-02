@@ -26,7 +26,16 @@ double rando(char * password)
 
     /* Password string -> ints */
     while(password[i] != '\0'){
-	pass_seed += (int)password[i];
+	/* To avoid most collisions */
+	if((i%2)==0){
+	    pass_seed += (int)password[i];
+	}
+	else if((i%3)==0){
+	    pass_seed -= (int)password[i];
+	}
+	else{
+	    pass_seed =+ 2*(int)password[i];
+	}
 	i++;
     }
     x10 -= pass_seed; x11 += pass_seed; x12 -= pass_seed;     /* To modify seeds with the password */

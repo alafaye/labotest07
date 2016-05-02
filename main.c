@@ -13,6 +13,7 @@
 #include "crypto.h"
 
 #define BASE_PASS "Justanotthatrandomandlongstring"
+#define LIMIT_SIZE_PASS 32
 
 /* 
  * Arguments should be given following this format:
@@ -27,9 +28,9 @@
 int main(int argc, const char ** argv){
     /* Variable declaration */
     FILE *in_file, *out_file;
-    char * in_file_name,  * out_file_name, * password, accept;
+    char * in_file_name,  * out_file_name, * password, buffer_password[LIMIT_SIZE_PASS], accept;
     /* Mode: 0 for encryption, 1 for decryption */
-    int mode, in_file_name_length, out_file_name_length, password_length;
+    int mode, arg_nbr, in_file_name_length, out_file_name_length, password_length;
 
     /* Arguments mangement */
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -41,25 +42,27 @@ int main(int argc, const char ** argv){
 	/*To correctly set the string size */
 	in_file_name_length = strlen(argv[2]);
 	out_file_name_length = strlen(argv[3]);
+
+	/* Set correct file name for in_file */
 	in_file_name = malloc(in_file_name_length * sizeof(char));
 	if(in_file_name == NULL){
 	    printf("Le nom du fichier d'entrée n'est pas valide!");
 	    return EXIT_FAILURE;
 	}
+	strcpy(in_file_name, argv[2]);
+
+	/* Set correct file name for out_file */
 	out_file_name = malloc(out_file_name_length * sizeof(char));
 	if(out_file_name == NULL){
 	    printf("Le nom du fichier de sortie n'est pas valide!");
 	    return EXIT_FAILURE;
 	}
-
-	strcpy(in_file_name, argv[2]);
 	strcpy(out_file_name, argv[3]);
     }
 
     /* 
      * Check if password is inputed by the user
-     * If not use default password "test1234"
-     * TODO specify password length
+     * If not use default password
      */
     if(argc == 6){
 	if(strcmp(argv[4], "-p")==0){
@@ -80,9 +83,21 @@ int main(int argc, const char ** argv){
     else{
 	/* If the user is not providing a password through argv, ask for one */
 	printf("Entrez un mot de passe: ");
-	if(scanf("%s", password)!=1){
+	arg_nbr = scanf("%s", buffer_password);
+	while(getchar()!='\n');
+
+	if(arg_nbr==1){
+	    password_length = strlen(buffer_password);
+	    password = malloc(password_length * sizeof(char));
+	    if(password == NULL){
+		printf("Le mot de passe n'est pas valide!");
+		return EXIT_FAILURE;
+	    }
+	    strcpy(password, buffer_password);
+	}
+	else if(arg_nbr != 1){
 	    /* If the user input is not recognised, using default pass */
-	    while(getchar()!='\n');
+	    printf("Mot de passe non reconnu! Mot de passe de base utilisé.\n");
 
 	    password_length = strlen(BASE_PASS);
 	    password = malloc(password_length * sizeof(char));
@@ -93,7 +108,6 @@ int main(int argc, const char ** argv){
 	    strcpy(password, BASE_PASS);
 	}
     }
-    printf("Used PASS: %s\n", password);
 
     /* Mode check an printing out to stdr the expected result */
     if(strcmp(argv[1], "-c")==0){
@@ -117,6 +131,7 @@ int main(int argc, const char ** argv){
     if((in_file = fopen(in_file_name, "rb")) == NULL){
 	printf("Le fichier d'entrée n'existe pas!");
 	free(in_file_name);
+	free(out_file_name);
 	free(password);
 	return EXIT_FAILURE;
     }
@@ -126,8 +141,9 @@ int main(int argc, const char ** argv){
 	fclose(out_file);
 	/* Asking if the file need to be deleted */
 	printf("Le fichier de sortie existe déjà, l'écraser? [y/n] : ");
-
-	scanf("%c", &accept);
+	if(scanf("%c", &accept)!=1){
+	    return EXIT_FAILURE;
+	}
 	while(getchar()!='\n');
 
 	if(accept=='y'){
@@ -168,6 +184,7 @@ int main(int argc, const char ** argv){
     fclose(out_file);
     free(in_file_name);
     free(out_file_name);
+    /* free(password); */
 
     return EXIT_SUCCESS;
 }
