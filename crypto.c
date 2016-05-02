@@ -5,15 +5,8 @@
 double rando(char * password)
 { 
     /* Password string -> ints*/
-    int i=0, pass_seed=0;
-    while(password[i] != '\0'){
-	pass_seed += (int)password[i];
-	i++;
-    }
     static int x10 = 12345, x11 = 67890, x12 = 13579,          /* initial value */
 	       x20 = 24680, x21 = 98765, x22 = 43210;               /* of seeds */
-    x10 -= pass_seed; x11 += pass_seed; x12 -= pass_seed;     /* To modify seeds with the password */
-    x20 += pass_seed; x21 -= pass_seed; x22 += pass_seed;
     const int m = 2147483647; const int m2 = 2145483479;
     const int a12= 63308; const int q12=33921; const int r12=12979;
     const int a13=-183326; const int q13=11714; const int r13=2883;
@@ -21,6 +14,15 @@ double rando(char * password)
     const int a23=-539608; const int q23= 3976; const int r23=2071;
     const double invm = 4.656612873077393e-10;
     int h, p12, p13, p21, p23;
+    int i=0, pass_seed=0;
+
+    while(password[i] != '\0'){
+	pass_seed += (int)password[i];
+	i++;
+    }
+    x10 -= pass_seed; x11 += pass_seed; x12 -= pass_seed;     /* To modify seeds with the password */
+    x20 += pass_seed; x21 -= pass_seed; x22 += pass_seed;
+
     h = x10/q13; p13 = -a13*(x10-h*q13)-h*r13;
     h = x11/q12; p12 =  a12*(x11-h*q12)-h*r12;
     if (p13 < 0) p13 = p13 + m; if (p12 < 0) p12 = p12 + m;

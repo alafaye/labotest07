@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "crypto.h"
-#include "utils.h"
 
-#define LIMIT 31
+#define BASE_PASS "Justanotthatrandomandlongstring"
 
 /* Arguments should be given following this format:
  * Encryption:
@@ -53,6 +52,7 @@ int main(int argc, const char ** argv){
      */
     if(argc == 6){
 	if(strcmp(argv[4], "-p")==0){
+	    password_length = strlen(argv[4]);
 	    password = malloc(password_length * sizeof(char));
 	    if(password == NULL){
 		printf("Le mot de passe n'est pas valide!");
@@ -61,6 +61,7 @@ int main(int argc, const char ** argv){
 	    strcpy(password, argv[5]);
 	}
 	else{
+	    password=NULL;
 	    printf("Argument %s non reconnu!", argv[5]);
 	    return EXIT_FAILURE;
 	}
@@ -69,12 +70,13 @@ int main(int argc, const char ** argv){
 	/* A basic password is provided to rando if the user is not giving
 	 * it's own
 	 */
+	password_length = strlen(BASE_PASS);
 	password = malloc(password_length * sizeof(char));
 	if(password == NULL){
 	    printf("Le mot de passe n'est pas valide!");
 	    return EXIT_FAILURE;
 	}
-	strcpy(password, "Justarandomandlongstring");
+	strcpy(password, BASE_PASS);
     }
 
     /* Mode check an printing out to stdr the expected result */
@@ -91,15 +93,9 @@ int main(int argc, const char ** argv){
 	return EXIT_FAILURE;
     }
 
-    /* File open and control */
-
-
-    if(open_in_file(in_file, in_file_name)==EXIT_FAILURE){
-	return EXIT_FAILURE;
-    }
-    if(open_out_file(out_file, out_file_name)==EXIT_FAILURE){
-	return EXIT_FAILURE;
-    }
+    /* File open and control 
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    */
 
     /* First check if input file exists */
     if((in_file = fopen(in_file_name, "rb")) == NULL){
