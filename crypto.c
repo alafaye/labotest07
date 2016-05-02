@@ -1,3 +1,12 @@
+/*
+ * Auteur: Alexandre Lafaye
+ * Labo07: Files, args.
+ *
+ * But: Le but de ce laboratoire est de gérer l'ouverture/fermeture
+ * des fichiers et les arguments dans le main.
+ *
+ * Date: 02.04.2016
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
