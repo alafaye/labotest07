@@ -47,6 +47,7 @@ int main(int argc, const char ** argv){
 	in_file_name = malloc(in_file_name_length * sizeof(char));
 	if(in_file_name == NULL){
 	    printf("Le nom du fichier d'entrée n'est pas valide!");
+	    free(in_file_name);
 	    return EXIT_FAILURE;
 	}
 	strcpy(in_file_name, argv[2]);
@@ -55,6 +56,7 @@ int main(int argc, const char ** argv){
 	out_file_name = malloc(out_file_name_length * sizeof(char));
 	if(out_file_name == NULL){
 	    printf("Le nom du fichier de sortie n'est pas valide!");
+	    free(in_file_name); free(out_file_name);
 	    return EXIT_FAILURE;
 	}
 	strcpy(out_file_name, argv[3]);
@@ -70,6 +72,7 @@ int main(int argc, const char ** argv){
 	    password = malloc(password_length * sizeof(char));
 	    if(password == NULL){
 		printf("Le mot de passe n'est pas valide!");
+		free(in_file_name); free(out_file_name); free(password);
 		return EXIT_FAILURE;
 	    }
 	    strcpy(password, argv[5]);
@@ -77,6 +80,7 @@ int main(int argc, const char ** argv){
 	else{
 	    password=NULL;
 	    printf("Argument %s non reconnu!", argv[5]);
+	    free(in_file_name); free(out_file_name); free(password);
 	    return EXIT_FAILURE;
 	}
     }
@@ -91,6 +95,7 @@ int main(int argc, const char ** argv){
 	    password = malloc(password_length * sizeof(char));
 	    if(password == NULL){
 		printf("Le mot de passe n'est pas valide!");
+		free(in_file_name); free(out_file_name); free(password);
 		return EXIT_FAILURE;
 	    }
 	    strcpy(password, buffer_password);
@@ -103,6 +108,7 @@ int main(int argc, const char ** argv){
 	    password = malloc(password_length * sizeof(char));
 	    if(password == NULL){
 		printf("Le mot de passe n'est pas valide!");
+		free(in_file_name); free(out_file_name); free(password);
 		return EXIT_FAILURE;
 	    }
 	    strcpy(password, BASE_PASS);
@@ -130,9 +136,7 @@ int main(int argc, const char ** argv){
     /* First check if input file exists */
     if((in_file = fopen(in_file_name, "rb")) == NULL){
 	printf("Le fichier d'entrée n'existe pas!");
-	free(in_file_name);
-	free(out_file_name);
-	free(password);
+	free(in_file_name); free(out_file_name); free(password);
 	return EXIT_FAILURE;
     }
 
@@ -142,6 +146,7 @@ int main(int argc, const char ** argv){
 	/* Asking if the file need to be deleted */
 	printf("Le fichier de sortie existe déjà, l'écraser? [y/n] : ");
 	if(scanf("%c", &accept)!=1){
+	    free(in_file_name); free(out_file_name); free(password);
 	    return EXIT_FAILURE;
 	}
 	while(getchar()!='\n');
@@ -150,24 +155,21 @@ int main(int argc, const char ** argv){
 	    if((out_file = fopen(out_file_name, "wb")) == NULL){
 		printf("Echec de l'ouverture du fichier de sortie!");
 		fclose(in_file);
-		free(in_file_name);
-		free(out_file_name);
+		free(in_file_name); free(out_file_name); free(password);
 		return EXIT_FAILURE;
 	    }
 	}
 	else{
 	    fclose(in_file);
 	    fclose(out_file);
-	    free(in_file_name);
-	    free(out_file_name);
+	    free(in_file_name); free(out_file_name); free(password);
 	    return EXIT_FAILURE;
 	}
     }
     else if((out_file = fopen(out_file_name, "wb")) == NULL){
 	printf("Echec de l'ouverture du fichier de sortie!");
 	fclose(in_file);
-	free(in_file_name);
-	free(out_file_name);
+	free(in_file_name); free(out_file_name); free(password);
 	return EXIT_FAILURE;
     }
 
@@ -184,7 +186,7 @@ int main(int argc, const char ** argv){
     fclose(out_file);
     free(in_file_name);
     free(out_file_name);
-    /* free(password); */
+    free(password);
 
     return EXIT_SUCCESS;
 }
