@@ -63,6 +63,21 @@ int main(int argc, const char ** argv){
 	strcpy(out_file_name, argv[3]);
     }
 
+    /* Mode check an printing out to stdr the expected result */
+    if(strcmp(argv[1], "-c")==0){
+	printf("Encryption mode\n");
+	mode = 0;
+    }
+    else if(strcmp(argv[1], "-d")==0){
+	printf("Decryption mode\n");
+	mode = 1;
+    }
+    else{
+	printf("Mode non reconnu!");
+	free(in_file_name); free(out_file_name);
+	return EXIT_FAILURE;
+    }
+
     /* 
      * Check if password is inputed by the user
      * If not use default password
@@ -115,21 +130,6 @@ int main(int argc, const char ** argv){
 	    strcpy(password, BASE_PASS);
 	}
     }
-
-    /* Mode check an printing out to stdr the expected result */
-    if(strcmp(argv[1], "-c")==0){
-	printf("Encryption mode\n");
-	mode = 0;
-    }
-    else if(strcmp(argv[1], "-d")==0){
-	printf("Decryption mode\n");
-	mode = 1;
-    }
-    else{
-	printf("Mode non reconnu!");
-	return EXIT_FAILURE;
-    }
-
     /* File open and control 
      * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     */
