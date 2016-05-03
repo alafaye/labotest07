@@ -13,7 +13,6 @@
 #include "crypto.h"
 #include "utils.h"
 
-
 /* 
  * Arguments should be given following this format:
  * Encryption:
@@ -31,12 +30,17 @@ int main(int argc, char ** argv){
     /* Mode: 0 for encryption, 1 for decryption */
     int mode, bytes_written;
 
-    if(argparse(&in_file_name, &out_file_name, &password, argc, argv, &mode)==EXIT_FAILURE){
+    if(argparse(&in_file_name, &out_file_name, &password,
+		argc, argv, &mode)==EXIT_FAILURE){
 	return EXIT_FAILURE;
     }
 
-    open_read(&in_file, in_file_name);
-    open_write(&out_file, out_file_name);
+    if(open_read(&in_file, in_file_name)==EXIT_FAILURE){
+	return EXIT_FAILURE;
+    }
+    if(open_write(&out_file, out_file_name)==EXIT_FAILURE){
+	return EXIT_FAILURE;
+    }
 
     if(mode==0){
 	bytes_written = encrypt(in_file, out_file, password);

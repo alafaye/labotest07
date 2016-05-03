@@ -59,10 +59,10 @@ double rando(char * password)
  * Returns the number of bytes written to the encrypted file
  */
 int encrypt(FILE * fileIn, FILE * fileOut, char * password){
-    char c;
+    int c;
     int bytes_written=0;
     while((c = fgetc(fileIn)) != EOF){
-	fprintf(fileOut, "%c", (char)(c+(int)(rando(password)*100)));
+	fputc((c+(int)(rando(password)*255)), fileOut);
 	bytes_written += sizeof(char);
     }
     return bytes_written;
@@ -73,10 +73,10 @@ int encrypt(FILE * fileIn, FILE * fileOut, char * password){
  * Returns the number of bytes written to the decrypted file
  */
 int decrypt(FILE * fileIn, FILE * fileOut, char * password){
-    char c;
+    int c;
     int bytes_written=0;
     while((c = fgetc(fileIn)) != EOF){
-	fprintf(fileOut, "%c", (char)(c-(int)(rando(password)*100)));
+	fputc((c-(int)(rando(password)*255)), fileOut);
 	bytes_written += sizeof(char);
     }
     return bytes_written;
