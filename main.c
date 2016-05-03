@@ -116,7 +116,7 @@ int main(int argc, const char ** argv){
 	    }
 	    strcpy(password, buffer_password);
 	}
-	else if(arg_nbr != 1){
+	else if(arg_nbr!=1){
 	    /* If the user input is not recognised, using default pass */
 	    printf("Mot de passe non reconnu! Mot de passe de base utilisé.\n");
 
@@ -145,7 +145,7 @@ int main(int argc, const char ** argv){
     if((out_file = fopen(out_file_name, "rb")) != NULL){
 	fclose(out_file);
 	/* Asking if the file need to be deleted */
-	printf("Le fichier de sortie existe déjà, l'écraser? [y/n] : ");
+	printf("Le fichier de sortie : %s existe déjà, l'écraser? [y/n] : ", out_file_name);
 	if(scanf("%c", &accept)!=1){
 	    free(in_file_name); free(out_file_name); free(password);
 	    return EXIT_FAILURE;
