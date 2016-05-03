@@ -1,4 +1,12 @@
-
+/*
+ * Auteur: Alexandre Lafaye
+ * Labo07: Files, args.
+ *
+ * But: Le but de ce laboratoire est de gérer l'ouverture/fermeture
+ * des fichiers et les arguments dans le main.
+ *
+ * Date: 03.05.2016
+ */
 /* Encrypt function taking input files and passwords as args
  * Returns the number of bytes written to the encrypted file
  */
