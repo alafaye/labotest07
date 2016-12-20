@@ -37,7 +37,6 @@ int argparse(char ** in_file_name, char ** out_file_name, char ** password,
     }
     else{
 	printf("Mode non reconnu!");
-	free(*in_file_name); free(*out_file_name);
 	return EXIT_FAILURE;
     }
 
@@ -52,7 +51,6 @@ int argparse(char ** in_file_name, char ** out_file_name, char ** password,
 	else{
 	    *password=NULL;
 	    printf("Argument %s non reconnu!", argv[5]);
-	    free(*in_file_name); free(*out_file_name); free(*password);
 	    return EXIT_FAILURE;
 	}
     }
@@ -62,7 +60,7 @@ int argparse(char ** in_file_name, char ** out_file_name, char ** password,
 	*password=malloc(LIMIT_SIZE_PASS*sizeof(char));
 	if(*password==NULL){
 	    printf("La mémoire pour le mot de passe n'a pas pu être réservée!");
-	    free(*in_file_name); free(*out_file_name); free(*password);
+	    free(*password);
 	    return EXIT_FAILURE;
 	}
 	fgets(*password, LIMIT_SIZE_PASS, stdin);
@@ -76,7 +74,6 @@ int open_read(FILE ** in_file, char * in_file_name){
     /* First check if input file exists */
     if((*in_file = fopen(in_file_name, "rb")) == NULL){
 	printf("Le fichier d'entrée n'existe pas!");
-	free(in_file_name);
 	return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
@@ -93,7 +90,6 @@ int open_write(FILE ** out_file, char * out_file_name){
 	printf("Le fichier de sortie : %s existe déjà, l'écraser? [y/n] : ",
 		out_file_name);
 	if(scanf("%c", &accept)!=1){
-	    free(out_file_name);
 	    return EXIT_FAILURE;
 	}
 	while(getchar()!='\n');
@@ -101,19 +97,16 @@ int open_write(FILE ** out_file, char * out_file_name){
 	if(accept=='y'){
 	    if((*out_file = fopen(out_file_name, "wb")) == NULL){
 		printf("Echec de l'ouverture du fichier de sortie!");
-		free(out_file_name);
 		return EXIT_FAILURE;
 	    }
 	}
 	else{
 	    fclose(*out_file);
-	    free(out_file_name);
 	    return EXIT_FAILURE;
 	}
     }
     else if((*out_file = fopen(out_file_name, "wb")) == NULL){
 	printf("Echec de l'ouverture du fichier de sortie!");
-	free(out_file_name);
 	return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

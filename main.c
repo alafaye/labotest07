@@ -30,11 +30,13 @@ int main(int argc, char ** argv){
     /* Mode: 0 for encryption, 1 for decryption */
     int mode, bytes_written;
 
+    /* Arguments parsing */
     if(argparse(&in_file_name, &out_file_name, &password,
 		argc, argv, &mode)==EXIT_FAILURE){
 	return EXIT_FAILURE;
     }
 
+    /* Opening files */
     if(open_read(&in_file, in_file_name)==EXIT_FAILURE){
 	return EXIT_FAILURE;
     }
@@ -42,6 +44,7 @@ int main(int argc, char ** argv){
 	return EXIT_FAILURE;
     }
 
+    /* Encrypt or decrypt following the mode */
     if(mode==0){
 	bytes_written = encrypt(in_file, out_file, password);
     }
